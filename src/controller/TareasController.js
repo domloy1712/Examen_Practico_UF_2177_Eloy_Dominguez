@@ -1,6 +1,6 @@
 const pool = require('../db/db');
 
-exports.mostrar = async (res,req) =>{
+exports.mostrar = async (req,res) =>{
     try{
         const [rows] = await pool.query('SELECT * FROM Tareas')
         res.json(rows)
@@ -10,7 +10,7 @@ exports.mostrar = async (res,req) =>{
     }
 };
 
-exports.mostrarid = async (res,req) => {
+exports.mostrarid = async (req,res) => {
     const { id } = req.params
     try{
       const [rows] = await pool.query('SELECT * FROM Tareas WHERE id= ?', [id])
@@ -21,7 +21,7 @@ exports.mostrarid = async (res,req) => {
     }
 };
 
-exports.crear = async (res,req) => {
+exports.crear = async (req,res) => {
     const { Titulo, descripcion, completada, categoria_id } = req.body
     try{
         await pool.query('INSERT INTO Tareas(Titulo, Descripcion, Completada, categoria_id) VALUES (?,?,?,?)', [Titulo, descripcion, completada, categoria_id]);
@@ -32,7 +32,7 @@ exports.crear = async (res,req) => {
     }
 };
 
-exports.borrar = async (res,req) => {
+exports.borrar = async (req,res) => {
     const { id } = req.params;
     try{
         await pool.query('DELETE FROM Tareas WHERE id= ?',[id])
@@ -41,4 +41,18 @@ exports.borrar = async (res,req) => {
         console.log({error:error})
         res.status(500).json({message:'Campos no eliminados'})
     }
+};
+
+exports.modificar = async (req,res) => {
+const {id} = req.params;
+const { Titulo, descripcion, completada, categoria_id   } = req.body;
+try {
+    await pool.query ('SELECT * FROM Categorias WHERE id= ?', [id]);
+    await pool.query ('UPDATE Categorias SET Titulo=?, descripcion=?, completada=?, categoria=? WHERE id=?', [Titulo,descripcion,completada,categoria_id,id]);
+    res.json('Se modificaron bien');
+} catch (error){
+    console.log(error)
+    res.status(500).json({message:'no se modificaron correctamente', error})
+}
+
 };
