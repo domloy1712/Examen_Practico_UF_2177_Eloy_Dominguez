@@ -13,10 +13,32 @@ exports.mostrar = async (res,req) =>{
 exports.mostrarid = async (res,req) => {
     const { id } = req.params
     try{
-      const [rows] = await pool.query('SELECT * FROM Tareas W', [id])
+      const [rows] = await pool.query('SELECT * FROM Tareas WHERE id= ?', [id])
       res.json(rows)
     }catch(error){
     console.log({error:error})
     res.status(500).json({message: 'No muestra la categoria mostrada', error})
+    }
+};
+
+exports.crear = async (res,req) => {
+    const { Titulo, descripcion, completada, categoria_id } = req.body
+    try{
+        await pool.query('INSERT INTO Tareas(Titulo, Descripcion, Completada, categoria_id) VALUES (?,?,?,?)', [Titulo, descripcion, completada, categoria_id]);
+        res.json('Datos correctamente puestos')
+    }catch(error){
+     console.log({error:error});
+     res.status(500).json({message: 'Campos no correctos no insertados'})
+    }
+};
+
+exports.borrar = async (res,req) => {
+    const { id } = req.params;
+    try{
+        await pool.query('DELETE FROM Tareas WHERE id= ?',[id])
+        res.json('Campos Eliminados')
+    } catch (error) {
+        console.log({error:error})
+        res.status(500).json({message:'Campos no eliminados'})
     }
 };

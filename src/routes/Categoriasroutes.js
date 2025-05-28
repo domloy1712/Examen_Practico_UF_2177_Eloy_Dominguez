@@ -5,7 +5,7 @@ const Categoriascontroller = require('../controller/CategoriasController')
 Router.get('/', Categoriascontroller.mostrar);
 Router.get('/:id', Categoriascontroller.mostrarid);
 Router.post('/', Categoriascontroller.crear);
-Router.put('/:id', Categoriascontroller.modificar);
+
 Router.delete('/:id',Categoriascontroller.borrar);
 
 module.exports = Router;
